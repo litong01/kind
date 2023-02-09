@@ -13,6 +13,7 @@ on:
 env:
   IMAGE_NAME: kind
   IMAGE_TAG: v0.17.1
+  IMAGE_REGISTRY: docker.io
 
 jobs:
   build:
@@ -41,6 +42,7 @@ jobs:
         with:
           image: ${{ steps.build-image.outputs.image }}
           tags: ${{ steps.build-image.outputs.tags }}
+          registry: ${{ env.IMAGE_REGISTRY }}
           username: ${{ secrets.DH_USER }}
           password: ${{ secrets.DH_KEY }}
 
