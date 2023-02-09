@@ -35,8 +35,8 @@ jobs:
           dockerfiles: |
             ./Dockerfile
             
-      - name: Push To quay.io
-        id: push-to-quay
+      - name: Push To docker hub
+        id: push-to-dockerhub
         uses: redhat-actions/push-to-registry@v2
         with:
           image: ${{ steps.build-image.outputs.image }}
@@ -45,4 +45,4 @@ jobs:
           password: ${{ secrets.DH_KEY }}
 
       - name: Print image url
-        run: echo "Image pushed to ${{ steps.push-to-quay.outputs.registry-paths }}"
+        run: echo "Image pushed to ${{ steps.push-to-dockerhub.outputs.registry-paths }}"
