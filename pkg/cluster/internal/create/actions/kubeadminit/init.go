@@ -19,6 +19,7 @@ package kubeadminit
 
 import (
 	"strings"
+	"time"
 
 	"sigs.k8s.io/kind/pkg/errors"
 	"sigs.k8s.io/kind/pkg/exec"
@@ -135,9 +136,19 @@ func (a *action) Execute(ctx *actions.ActionContext) error {
 		taintArgs := []string{"--kubeconfig=/etc/kubernetes/admin.conf", "taint", "nodes", "--all"}
 		taintArgs = append(taintArgs, taints...)
 
-		if err := node.Command(
-			"kubectl", taintArgs...,
-		).Run(); err != nil {
+		cmd := node.Command("kubectl", taintArgs...)
+		indexLoop := 1
+		for indexLoop < 15 {
+			if err = cmd.Run(); err != nil {
+				time.Sleep(time.Duration(1) * time.Second)
+			} else {
+				break
+			}
+			indexLoop += 1
+		}
+
+		//If the error still exists, then return error
+		if err != nil {
 			return errors.Wrap(err, "failed to remove control plane taint")
 		}
 	}
