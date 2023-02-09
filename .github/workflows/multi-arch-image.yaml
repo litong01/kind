@@ -3,16 +3,16 @@ name: Multiarch build
 on:
   push:
     branches:
-    - v0.17.1
+    - v0.17.0
   pull_request:
     branches:
-    - v0.17.1
+    - v0.17.0
 
   workflow_dispatch:
 
 env:
   IMAGE_NAME: kind
-  IMAGE_TAG: v0.17.1
+  IMAGE_TAG: v0.17.0
   IMAGE_REGISTRY: docker.io
   IMAGE_NAMESPACE: email4tong
 
@@ -33,7 +33,7 @@ jobs:
         with:
           image: ${{ env.IMAGE_NAME }}
           tags: ${{ env.IMAGE_TAG }}
-          archs: amd64, arm64
+          archs: amd64, ppc64le, s390x, arm64
           dockerfiles: |
             ./Dockerfile
             
