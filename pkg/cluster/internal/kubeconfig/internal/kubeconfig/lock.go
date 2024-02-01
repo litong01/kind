@@ -32,7 +32,7 @@ func lockFile(filename string) error {
 			return err
 		}
 	}
-	f, err := os.OpenFile(lockName(filename), os.O_CREATE|os.O_EXCL, 0)
+	f, err := os.OpenFile(lockName(filename), os.O_CREATE|os.O_EXCL, 0755)
 	if err != nil {
 		return err
 	}
