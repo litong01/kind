@@ -1,0 +1,43 @@
+name: Multiarch build
+
+on:
+  push:
+    branches:
+    - v0.23.0
+  pull_request:
+    branches:
+    - v0.23.0
+
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: kind
+  IMAGE_TAG: v0.23.0
+  IMAGE_REGISTRY: docker.io
+  IMAGE_NAMESPACE: email4tong
+
+jobs:
+  build:
+    name: Build and push multi-arch image
+    runs-on: ubuntu-20.04
+    
+    steps:
+      - uses: actions/checkout@v4
+        
+      - name: set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DH_USER }}
+          password: ${{ secrets.DH_KEY }}
+
+      - name: build and push images
+        run: |
+          docker buildx build --push \
+            --tag ${{env.IMAGE_NAMESPACE }}/${{env.IMAGE_NAME}}:${{env.IMAGE_TAG}} \
+            --platform linux/amd64,linux/arm64 .
